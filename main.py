@@ -1,14 +1,12 @@
 import sys, os
-# import imageio.v3 as iio
 import imageio as iio
 from PIL import Image
 import PIL.ImageOps 
 
-if (len(sys.argv) > 0):
+if (len(sys.argv) > 1):
     filename = sys.argv[1]
 else:
-    filename = "enemy.png"
-print("Input " + filename)
+    raise Exception("Please provide an image filename")
 
 pimg = Image.open(filename)
 # Prepare inverse
@@ -20,12 +18,15 @@ fimg = PIL.ImageOps.mirror(pimg)
 fimg.save(".flip.png")
 fimg = None
 
-# Write the gif
+# Read the things
 img = iio.imread(filename)
 iimg = iio.imread(".inverse.png")
 fimg = iio.imread(".flip.png")
+
+# Cleanup
 os.remove(".inverse.png")
 os.remove(".flip.png")
 
-iio.mimwrite("output.gif", [img, iimg, img, iimg, img, img, img, img, fimg, fimg, img, img, fimg, fimg, img, img], format='.gif', fps=240)
+# Write the gif
+iio.mimwrite("output.gif", [img, iimg, img, iimg, img, img, img, img, fimg, img, fimg, img, img], format='.gif', fps=240)
 
